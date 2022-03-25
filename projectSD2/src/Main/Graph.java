@@ -1,14 +1,17 @@
 package Main;
 
 import java.io.File;
+import java.util.HashSet;
 
 public class Graph {
-	private File airport;
-	private File fly;
+	private HashSet<Airport> airportSet = new HashSet<>();
+	
+	
+	
 	
 	public Graph(File airport,File fly) {
-		this.airport = airport;
-		this.fly = fly;
+		
+		
 	}
 	
 	public void calculerItineraireMinimisantNombreVol(String source,String dest) {
