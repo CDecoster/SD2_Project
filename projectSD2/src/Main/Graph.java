@@ -32,8 +32,6 @@ public class Graph {
 			sb.append("\n");     
 		}
 		fr.close();    
-		// System.out.println("Contenu du fichier: ");
-		// System.out.println(sb.toString()); 
 
 
 		// Read file Fly
@@ -54,14 +52,14 @@ public class Graph {
 	public Airport formattedAirportFromLine(String line) {
 		String[] tab = line.split(",");
 		Airport airport = new Airport(tab[0],tab[1],tab[2],tab[3],Double.parseDouble(tab[4]),Double.parseDouble(tab[5]));
-		System.out.println(airport.toString());
+		//System.out.println(airport.toString());
 		return airport;
 	}
 
 	public Fly  formattedFlyFromLine(String line) {
 		String[] tab = line.split(",");
 		Fly fly = new Fly(tab[0],tab[1],tab[2]);
-		System.out.println(fly.toString());
+		//System.out.println(fly.toString());
 		return fly;
 	}
 
