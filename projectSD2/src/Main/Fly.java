@@ -2,14 +2,14 @@ package Main;
 
 public class Fly {
 	
-	private String  airline;
+	private	String  airline;
 	// ISO2 format
-	private String source;
+	private Airport source;
 	// ISO2 format
-	private String dest;
+	private Airport dest;
 	
 	
-	public Fly(String airline, String source, String dest) {
+	public Fly(String airline, Airport source, Airport dest) {
 		super();
 		this.airline = airline;
 		this.source = source;
@@ -27,28 +27,28 @@ public class Fly {
 	}
 
 
-	public String getSource() {
+	public Airport getSource() {
 		return source;
 	}
 
 
-	public void setSource(String source) {
+	public void setSource(Airport source) {
 		this.source = source;
 	}
 
 
 	@Override
 	public String toString() {
-		return "Fly [airline=" + airline + ", source=" + source + ", dest=" + dest + "]";
+		return "Fly [airline=" + airline + ", source=" + source.getIso2() + ", dest=" + dest.getIso2() + "]";
 	}
 
 
-	public String getDest() {
+	public Airport getDest() {
 		return dest;
 	}
 
 
-	public void setDest(String dest) {
+	public void setDest(Airport dest) {
 		this.dest = dest;
 	}
 
