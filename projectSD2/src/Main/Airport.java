@@ -76,6 +76,13 @@ public class Airport {
 	}
 
 
+	@Override
+	public String toString() {
+		return "Airport [iso2=" + iso2 + ", name=" + name + ", city=" + city + ", country=" + country + ", latitude="
+				+ latitude + ", longitude=" + longitude + "]";
+	}
+
+
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}

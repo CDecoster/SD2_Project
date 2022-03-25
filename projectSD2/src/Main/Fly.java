@@ -1,6 +1,6 @@
 package Main;
 
-public class Arc {
+public class Fly {
 	
 	private String  airline;
 	// ISO2 format
@@ -9,7 +9,7 @@ public class Arc {
 	private String dest;
 	
 	
-	public Arc(String airline, String source, String dest) {
+	public Fly(String airline, String source, String dest) {
 		super();
 		this.airline = airline;
 		this.source = source;
@@ -34,6 +34,12 @@ public class Arc {
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Fly [airline=" + airline + ", source=" + source + ", dest=" + dest + "]";
 	}
 
 
