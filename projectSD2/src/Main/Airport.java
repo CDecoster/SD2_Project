@@ -8,6 +8,7 @@ public class Airport {
 	private String country;
 	private double latitude;
 	private double longitude;
+	private double cout;
 	
 	
 	public Airport(String iso2, String name, String city, String country, double latitude, double longitude) {
@@ -18,8 +19,17 @@ public class Airport {
 		this.country = country;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.cout = Integer.MAX_VALUE;
+		
+	}
+	
+	public double getCout() {
+		return this.cout;
 	}
 
+	public void setCout(double cout) {
+		this.cout=cout;
+	}
 
 	public String getIso2() {
 		return iso2;

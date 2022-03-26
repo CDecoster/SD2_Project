@@ -7,7 +7,14 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
+
+
+
+import java.util.*;
+
+
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -123,9 +130,111 @@ public class Graph {
 	
 
 	public void calculerItineraireMiniminantDistance(String source,String dest) {
+		HashMap<Airport,Fly> path = new HashMap<Airport, Fly>();
+		System.out.println("coucou");
+		//initialisation des liens airports vols
+		HashMap<Airport,HashSet<Fly>> outGoingFlies = new HashMap<>();
+		for (String iso : airportMap.keySet()) {
+			outGoingFlies.put(airportMap.get(iso),new HashSet<>());
+		}
+		for (Fly fly : flySet) {
+			outGoingFlies.get(fly.getSource()).add(fly);
+		}	
+		
+		//comparator pour rentrer les couts les sommets un par un dans le TreeSet et les ordonner directement
+		Comparator<Airport> comparateur  = new Comparator<Airport> () {
+			public int compare(Airport o1, Airport o2) {
+				int delta = Double.compare(o1.getCout(), o2.getCout());
+				if (delta==0) return o1.getIso2().compareTo(o2.getIso2());
+				return delta;
+			}
+		};
+		
+		//initialisation du TreeSet sur base du comparateur créer si dessus temporaire
+		TreeSet<Airport> sommetsTemp = new TreeSet<Airport>(comparateur);
+		
+		//sommet definitif
+		HashSet<Airport> sommetsDef = new HashSet<>();
+		
+		//cout de la source initialisé à 0
+		Airport airportSource=airportMap.get(source);
+		airportSource.setCout(0);
+		
+		//ajout de la source directement dans sommet def
+		sommetsDef.add(airportSource);
+		
+		Airport destination = airportSource;
+		
+	
+		
+		while(destination.getIso2()!= dest) { //change here destination airport temp
+			
+			//récuperer la distance entre airportTemps et ses destinations noté la distance
+			for(Fly fly : outGoingFlies.get(destination)) { //change here destination airport temp
+				
+				//verifier si déjà placé dans definitif
+				destination = fly.getDest();
+				if(!sommetsDef.contains(destination)) {
+					double distanceTrajet = fly.getDistance();
+					double coutActuel = destination.getCout();
+					if(coutActuel== Integer.MAX_VALUE) coutActuel = 0;
+					double nouvelleDistance = distanceTrajet+coutActuel;
+					
+					//check si déjà dans les sommets temporaires
+					if(sommetsTemp.contains(destination)) {
+						if(destination.getCout() > nouvelleDistance ) {
+							sommetsTemp.remove(destination);
+							destination.setCout(nouvelleDistance);
+							sommetsTemp.add(destination);
+							System.out.println("si contains"+fly);
+							path.put(destination, fly);
+						}
+					}else {
+						//pas dans les sommets temp
+						destination.setCout(nouvelleDistance);
+						sommetsTemp.add(destination);
+						
+						path.put(destination, fly);
+					}
+				}
+			}
+			
+			if(sommetsTemp.isEmpty()) {
+				break;
+			}
+			//récuperer le sommet le plus court
+			Airport airportLowest = sommetsTemp.first();
+			sommetsDef.add(airportLowest);
+			sommetsTemp.remove(airportLowest);
+				
+		}
+		 
+		
+		//distance totale
+		double distanceTotale=0;
+		ArrayList<Fly> trajet = new ArrayList<>();
+		Airport airport = airportMap.get(dest);
+		//System.out.println((Fly) outGoingFlies.get(airport).toArray()[0]);
+		//trajet.add((Fly) outGoingFlies.get(airport).toArray()[0]);
+		
+		while(airport != null) {
+
+			if(airport == airportSource) {
+				break;
+			}
+			trajet.add(path.get(airport));
+			Fly fly = trajet.get(trajet.size()-1);
+			airport = fly.getSource();
+	
+		}
+		for(Fly fly :trajet) {
+			System.out.println("coucou");
+
+		}
 		
 
 	}
+	
 	
 	public Airport InstanciateAirportFromLine(String line) {
 		String[] tab = line.split(",");
