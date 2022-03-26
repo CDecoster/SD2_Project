@@ -1,12 +1,15 @@
 package Main;
+import Utils.Util;
 
 public class Fly {
 	
 	private	String  airline;
-	// ISO2 format
+	
 	private Airport source;
-	// ISO2 format
+	
 	private Airport dest;
+	
+	private Double distance;
 	
 	
 	public Fly(String airline, Airport source, Airport dest) {
@@ -14,11 +17,17 @@ public class Fly {
 		this.airline = airline;
 		this.source = source;
 		this.dest = dest;
+		this.distance = Util.distance(source.getLatitude(),source.getLongitude(),dest.getLatitude(),dest.getLongitude());
 	}
 
 
 	public String getAirline() {
 		return airline;
+	}
+
+
+	public Double getDistance() {
+		return distance;
 	}
 
 
