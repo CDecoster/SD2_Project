@@ -62,10 +62,7 @@ public class Graph {
 		// marked airport
 		Set<Airport> markAirport = new HashSet<>();
 		markAirport.add(airportSrc);
-				
-		//When we find the dest , stop.
-		Boolean stop = false;
-		
+						
 		//'Arc sortants'
 		HashMap<Airport,HashSet<Fly>> outGoingFlies = new HashMap<>();
 		for (String iso : airportMap.keySet()) {
@@ -78,24 +75,26 @@ public class Graph {
 		
 		// Save the way		
 		HashMap<Airport,Fly>  path = new HashMap<>();
-				
-		while(!queue.isEmpty() && !stop) {
+		
+		
+		while(!queue.isEmpty()&& !queue.getFirst().equals(airportDest)) {
 			Airport currentNode = queue.poll();				
 			for (Fly fly : outGoingFlies.get(currentNode)) {
 				Airport arrivee = fly.getDest();
 					if(!markAirport.contains(arrivee)) {
 						path.put(arrivee, fly);
 						markAirport.add(arrivee);						
-						queue.add(fly.getDest());
+						queue.add(arrivee);
 					}										
-					if(fly.getDest().equals(airportDest)) {
-						
-						stop = true;
-						break;										
-				}				
+							
 			}
 			
 		}
+		if (queue.isEmpty()) {
+			System.out.println("Chemin impossible.");
+			System.exit(1);
+		}
+		
 				
 		LinkedList<Fly> itinerary = new LinkedList<Fly>();
 		Double totalDist = 0.0;		
@@ -124,6 +123,7 @@ public class Graph {
 	
 
 	public void calculerItineraireMiniminantDistance(String source,String dest) {
+		
 
 	}
 	
