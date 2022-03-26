@@ -98,14 +98,16 @@ public class Graph {
 			
 		}
 		if (queue.isEmpty()) {
-			System.out.println("Chemin impossible.");
+			System.out.println("No way found.");
 			System.exit(1);
 		}
 		
-				
+		
+						
 		LinkedList<Fly> itinerary = new LinkedList<Fly>();
 		Double totalDist = 0.0;		
-		Airport destination = airportDest;					
+		Airport destination = airportDest;	
+		
 		while(destination !=null) {
 			if (destination == airportSrc ) {
 				break;
@@ -114,16 +116,13 @@ public class Graph {
 			itinerary.addFirst(path.get(destination));					
 			destination = itinerary.get(0).getSource();
 		}
-				
+		
+		
 		for (Fly fly : itinerary) {
 			System.out.println(fly);
 			totalDist += fly.getDistance();
 		}
-		System.out.println("Distance totale : "+totalDist);
-		
-		
-	
-		
+		System.out.println("Distance totale : "+totalDist);							
 		}
 		
 			
@@ -150,13 +149,13 @@ public class Graph {
 			}
 		};
 		
-		//initialisation du TreeSet sur base du comparateur créer si dessus temporaire
+		//initialisation du TreeSet sur base du comparateur crï¿½er si dessus temporaire
 		TreeSet<Airport> sommetsTemp = new TreeSet<Airport>(comparateur);
 		
 		//sommet definitif
 		HashSet<Airport> sommetsDef = new HashSet<>();
 		
-		//cout de la source initialisé à 0
+		//cout de la source initialisï¿½ ï¿½ 0
 		Airport airportSource=airportMap.get(source);
 		airportSource.setCout(0);
 		
@@ -169,10 +168,10 @@ public class Graph {
 		
 		while(destination.getIso2()!= dest) { //change here destination airport temp
 			
-			//récuperer la distance entre airportTemps et ses destinations noté la distance
+			//rï¿½cuperer la distance entre airportTemps et ses destinations notï¿½ la distance
 			for(Fly fly : outGoingFlies.get(destination)) { //change here destination airport temp
 				
-				//verifier si déjà placé dans definitif
+				//verifier si dï¿½jï¿½ placï¿½ dans definitif
 				destination = fly.getDest();
 				if(!sommetsDef.contains(destination)) {
 					double distanceTrajet = fly.getDistance();
@@ -180,7 +179,7 @@ public class Graph {
 					if(coutActuel== Integer.MAX_VALUE) coutActuel = 0;
 					double nouvelleDistance = distanceTrajet+coutActuel;
 					
-					//check si déjà dans les sommets temporaires
+					//check si dï¿½jï¿½ dans les sommets temporaires
 					if(sommetsTemp.contains(destination)) {
 						if(destination.getCout() > nouvelleDistance ) {
 							sommetsTemp.remove(destination);
@@ -202,7 +201,7 @@ public class Graph {
 			if(sommetsTemp.isEmpty()) {
 				break;
 			}
-			//récuperer le sommet le plus court
+			//rï¿½cuperer le sommet le plus court
 			Airport airportLowest = sommetsTemp.first();
 			sommetsDef.add(airportLowest);
 			sommetsTemp.remove(airportLowest);
@@ -233,13 +232,12 @@ public class Graph {
 		}
 		
 
-	}
+	
 	
 	
 	public Airport InstanciateAirportFromLine(String line) {
 		String[] tab = line.split(",");
-		Airport airport = new Airport(tab[0],tab[1],tab[2],tab[3],Double.parseDouble(tab[4]),Double.parseDouble(tab[5]));
-		//System.out.println(airport.toString());
+		Airport airport = new Airport(tab[0],tab[1],tab[2],tab[3],Double.parseDouble(tab[4]),Double.parseDouble(tab[5]));		
 		return airport;
 	}
 
@@ -247,8 +245,7 @@ public class Graph {
 		String[] tab = line.split(",");
 		Airport src = airportMap.get(tab[1]);
 		Airport dest = airportMap.get(tab[2]);
-		Fly fly = new Fly(tab[0],src,dest);
-		//System.out.println(fly.toString());
+		Fly fly = new Fly(tab[0],src,dest);	
 		return fly;
 	}
 
