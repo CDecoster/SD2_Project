@@ -2,18 +2,18 @@ package Main;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Set;
 import java.io.FileReader;
 import java.io.IOException;
 
+
+
 public class Graph {
-	//private HashSet<Airport> airportSet = new HashSet<>();
 	private HashMap<String,Airport> airportMap = new HashMap<>();
 	private HashSet<Fly> flySet = new HashSet<>();
 	
@@ -59,51 +59,68 @@ public class Graph {
 		//BFS file + add source in it
 		Deque<Airport> queue = new ArrayDeque<>();
 		queue.add(airportSrc);
-		//When we find the dest , stop.
-		Boolean stop = false;		
-		HashMap<Airport,HashSet<Fly>> outGoingFlies = new HashMap<>();
-		Deque<Airport> queueAirport = new ArrayDeque<>();
-		
-		
-		
-		while(!queue.isEmpty() && !stop) {
-			Airport currentNode = queue.poll();
-			queueAirport.add(currentNode);
-			for (Fly fly : flySet) {				
-				if(fly.getSource().equals(currentNode) && !queue.contains(currentNode)) {
-					
-					if(!outGoingFlies.containsKey(fly.getSource())) outGoingFlies.put(currentNode, new HashSet<>());
-					System.out.println(outGoingFlies.get(currentNode));
-					outGoingFlies.get(currentNode).add(fly);
-					
-										
-					queue.add(fly.getDest());
-					if(fly.getDest().equals(airportDest)) {						
-						stop = true;
-						break;
-					}
-					
-				}
+		// marked airport
+		Set<Airport> markAirport = new HashSet<>();
+		markAirport.add(airportSrc);
 				
+		//When we find the dest , stop.
+		Boolean stop = false;
+		
+		//'Arc sortants'
+		HashMap<Airport,HashSet<Fly>> outGoingFlies = new HashMap<>();
+		for (String iso : airportMap.keySet()) {
+			outGoingFlies.put(airportMap.get(iso),new HashSet<>());
+		}
+		for (Fly fly : flySet) {
+			outGoingFlies.get(fly.getSource()).add(fly);
+			
+		}
+		
+		// Save the way		
+		HashMap<Airport,Fly>  path = new HashMap<>();
+				
+		while(!queue.isEmpty() && !stop) {
+			Airport currentNode = queue.poll();				
+			for (Fly fly : outGoingFlies.get(currentNode)) {
+				Airport arrivee = fly.getDest();
+					if(!markAirport.contains(arrivee)) {
+						path.put(arrivee, fly);
+						markAirport.add(arrivee);						
+						queue.add(fly.getDest());
+					}										
+					if(fly.getDest().equals(airportDest)) {
+						
+						stop = true;
+						break;										
+				}				
 			}
 			
 		}
-		Double totalDist;
-		ArrayList<Fly> itinerary = new ArrayList<Fly>();
-		while(!queueAirport.isEmpty()) {
-		Airport origine = queueAirport.poll();
-		for (Fly arc : outGoingFlies.get(origine)) {
-			if(arc.getDest().equals(airportDest)) {
-				itinerary.add(arc);
+				
+		LinkedList<Fly> itinerary = new LinkedList<Fly>();
+		Double totalDist = 0.0;		
+		Airport destination = airportDest;					
+		while(destination !=null) {
+			if (destination == airportSrc ) {
+				break;
 			}
+			
+			itinerary.addFirst(path.get(destination));					
+			destination = itinerary.get(0).getSource();
 		}
+				
+		for (Fly fly : itinerary) {
+			System.out.println(fly);
+			totalDist += fly.getDistance();
+		}
+		System.out.println("Distance totale : "+totalDist);
+		
+		
 	
 		
 		}
-		System.out.println(itinerary);
+		
 			
-	}
-	
 	
 
 	public void calculerItineraireMiniminantDistance(String source,String dest) {
