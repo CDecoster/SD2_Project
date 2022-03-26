@@ -48,7 +48,8 @@ public class Fly {
 
 	@Override
 	public String toString() {
-		return "Fly [airline=" + airline + ", source=" + source.getIso2() + ", dest=" + dest.getIso2() + "]";
+		//return "Fly [airline=" + airline + ", source=" + source.getName() + ", dest=" + dest.getName() + ", distance =" + distance+ "]";
+		return "Fly [source=" + source.getIso2() + ", dest=" + dest.getIso2() + ", distance =" + distance+", airline = "+airline+ "]";
 	}
 
 

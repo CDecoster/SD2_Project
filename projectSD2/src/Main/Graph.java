@@ -16,7 +16,7 @@ public class Graph {
 	//private HashSet<Airport> airportSet = new HashSet<>();
 	private HashMap<String,Airport> airportMap = new HashMap<>();
 	private HashSet<Fly> flySet = new HashSet<>();
-
+	
 
 
 	public Graph(File...files) throws IOException {		
@@ -52,25 +52,33 @@ public class Graph {
 
 
 	public void calculerItineraireMinimisantNombreVol(String source,String dest) {
-		Airport airportSrc = airportMap.get(source);
+		//Source
+		Airport airportSrc = airportMap.get(source);		
+		// Destination
 		Airport airportDest = airportMap.get(dest);
+		//BFS file + add source in it
 		Deque<Airport> queue = new ArrayDeque<>();
-		
-		
-		Boolean stop = false;
-		
 		queue.add(airportSrc);
+		//When we find the dest , stop.
+		Boolean stop = false;		
+		HashMap<Airport,HashSet<Fly>> outGoingFlies = new HashMap<>();
+		Deque<Airport> queueAirport = new ArrayDeque<>();
+		
+		
+		
 		while(!queue.isEmpty() && !stop) {
-			Airport currentNode = queue.poll();			
-			for (Fly fly : flySet) {
-				List<Fly> listFly = new ArrayList<>();
-				if(fly.getSource().equals(currentNode) && !listFly.contains(fly)) {
-					listFly.add(fly);
+			Airport currentNode = queue.poll();
+			queueAirport.add(currentNode);
+			for (Fly fly : flySet) {				
+				if(fly.getSource().equals(currentNode) && !queue.contains(currentNode)) {
+					
+					if(!outGoingFlies.containsKey(fly.getSource())) outGoingFlies.put(currentNode, new HashSet<>());
+					System.out.println(outGoingFlies.get(currentNode));
+					outGoingFlies.get(currentNode).add(fly);
+					
+										
 					queue.add(fly.getDest());
-					if(fly.getDest().equals(airportDest)) {
-						for (Fly arc : listFly) {
-							System.out.println(arc);
-							}
+					if(fly.getDest().equals(airportDest)) {						
 						stop = true;
 						break;
 					}
@@ -81,11 +89,22 @@ public class Graph {
 			
 		}
 		Double totalDist;
-	
-		while(!queue.isEmpty()) {
-			//System.out.println(queue.poll());
+		ArrayList<Fly> itinerary = new ArrayList<Fly>();
+		while(!queueAirport.isEmpty()) {
+		Airport origine = queueAirport.poll();
+		for (Fly arc : outGoingFlies.get(origine)) {
+			if(arc.getDest().equals(airportDest)) {
+				itinerary.add(arc);
+			}
 		}
+	
+		
+		}
+		System.out.println(itinerary);
+			
 	}
+	
+	
 
 	public void calculerItineraireMiniminantDistance(String source,String dest) {
 
