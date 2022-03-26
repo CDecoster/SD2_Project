@@ -91,14 +91,16 @@ public class Graph {
 			
 		}
 		if (queue.isEmpty()) {
-			System.out.println("Chemin impossible.");
+			System.out.println("No way found.");
 			System.exit(1);
 		}
 		
-				
+		
+						
 		LinkedList<Fly> itinerary = new LinkedList<Fly>();
 		Double totalDist = 0.0;		
-		Airport destination = airportDest;					
+		Airport destination = airportDest;	
+		
 		while(destination !=null) {
 			if (destination == airportSrc ) {
 				break;
@@ -107,30 +109,104 @@ public class Graph {
 			itinerary.addFirst(path.get(destination));					
 			destination = itinerary.get(0).getSource();
 		}
-				
+		
+		
 		for (Fly fly : itinerary) {
 			System.out.println(fly);
 			totalDist += fly.getDistance();
 		}
-		System.out.println("Distance totale : "+totalDist);
-		
-		
-	
-		
+		System.out.println("Distance totale : "+totalDist);							
 		}
 		
 			
 	
 
 	public void calculerItineraireMiniminantDistance(String source,String dest) {
+		//Source
+		Airport airportSrc = airportMap.get(source);		
+		// Destination
+		Airport airportDest = airportMap.get(dest);
+		//BFS file + add source in it
+		Deque<Airport> queue = new ArrayDeque<>();
+		queue.add(airportSrc);
+		// marked airport
+		Set<Airport> markAirport = new HashSet<>();
+		markAirport.add(airportSrc);
+						
+		//'Arc sortants'
+		HashMap<Airport,HashSet<Fly>> outGoingFlies = new HashMap<>();
+		for (String iso : airportMap.keySet()) {
+			outGoingFlies.put(airportMap.get(iso),new HashSet<>());
+		}
+		for (Fly fly : flySet) {
+			outGoingFlies.get(fly.getSource()).add(fly);
+			
+		}
+		
+		// Save the way		
+		HashMap<Airport,Fly>  path = new HashMap<>();
+		
+		HashMap<Airport,Double> etiquetteProvisoire = new HashMap<>();
+		HashMap<Airport,Double> etiquetteDef = new HashMap<>();
+		
+		
+		
+		while(!queue.isEmpty()&& !queue.getFirst().equals(airportDest)) {
+			Airport currentNode = queue.poll();
+			Double distanceMin;
+			for (Fly fly : outGoingFlies.get(currentNode)) {
+				Airport arrivee = fly.getDest();			
+				etiquetteProvisoire.put(arrivee,fly.getDistance());		
+				for (Airport airportProv :etiquetteProvisoire.keySet()) {
+					etiquetteProvisoire.get(airportProv);
+					
+					
+					
+				}
+					if(!markAirport.contains(arrivee)) {
+						path.put(arrivee, fly);
+						markAirport.add(arrivee);						
+						queue.add(arrivee);
+					}										
+							
+			}
+			
+		}
+		if (queue.isEmpty()) {
+			System.out.println("No way found.");
+			System.exit(1);
+		}
+		
+		
+						
+		LinkedList<Fly> itinerary = new LinkedList<Fly>();
+		Double totalDist = 0.0;		
+		Airport destination = airportDest;	
+		
+		while(destination !=null) {
+			if (destination == airportSrc ) {
+				break;
+			}
+			
+			itinerary.addFirst(path.get(destination));					
+			destination = itinerary.get(0).getSource();
+		}
+		
+		
+		for (Fly fly : itinerary) {
+			System.out.println(fly);
+			totalDist += fly.getDistance();
+		}
+		System.out.println("Distance totale : "+totalDist);							
+		}
+		
 		
 
-	}
+	
 	
 	public Airport InstanciateAirportFromLine(String line) {
 		String[] tab = line.split(",");
-		Airport airport = new Airport(tab[0],tab[1],tab[2],tab[3],Double.parseDouble(tab[4]),Double.parseDouble(tab[5]));
-		//System.out.println(airport.toString());
+		Airport airport = new Airport(tab[0],tab[1],tab[2],tab[3],Double.parseDouble(tab[4]),Double.parseDouble(tab[5]));		
 		return airport;
 	}
 
@@ -138,8 +214,7 @@ public class Graph {
 		String[] tab = line.split(",");
 		Airport src = airportMap.get(tab[1]);
 		Airport dest = airportMap.get(tab[2]);
-		Fly fly = new Fly(tab[0],src,dest);
-		//System.out.println(fly.toString());
+		Fly fly = new Fly(tab[0],src,dest);	
 		return fly;
 	}
 
