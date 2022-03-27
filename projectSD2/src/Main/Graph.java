@@ -54,7 +54,7 @@ public class Graph {
 			}
 			fr.close();    
 		}
-		
+
 		for (String iso : airportMap.keySet()) {
 			outGoingFlies.put(airportMap.get(iso),new HashSet<>());
 		}
@@ -82,13 +82,8 @@ public class Graph {
 		Set<Airport> markAirport = new HashSet<>();
 		markAirport.add(airportSrc);
 
-
-
-
-
 		// Path taken.
 		HashMap<Airport,Fly>  path = new HashMap<>();
-
 
 		while(!queue.isEmpty()&& !queue.getFirst().equals(airportDest)) {
 			Airport currentNode = queue.poll();				
@@ -99,16 +94,12 @@ public class Graph {
 					markAirport.add(arrivee);						
 					queue.add(arrivee);
 				}										
-
 			}
-
 		}
 		if (queue.isEmpty()) {
 			System.out.println("No way found.");
 			System.exit(1);
 		}
-
-
 
 		LinkedList<Fly> itinerary = new LinkedList<Fly>();
 		Double totalDist = 0.0;		
@@ -118,7 +109,6 @@ public class Graph {
 			if (destination == airportSrc ) {
 				break;
 			}
-
 			itinerary.addFirst(path.get(destination));					
 			destination = itinerary.get(0).getSource();
 		}
@@ -138,9 +128,7 @@ public class Graph {
 		// Path taken.
 		HashMap<Airport,Fly> path = new HashMap<Airport, Fly>();
 
-
-
-		//comparator Used for Temporary Set of summit.
+		//comparator Used for Temporary Set of summit. Allow us to find easily the lowest distance in the temporary set of summit
 		Comparator<Airport> comparateur  = new Comparator<Airport> () {
 			public int compare(Airport o1, Airport o2) {
 				int delta = Double.compare(o1.getCout(), o2.getCout());
@@ -157,7 +145,8 @@ public class Graph {
 
 
 		Airport airportSource=airportMap.get(source);
-		airportSource.setCout(0);		
+		airportSource.setCout(0);
+
 		//Add the airport source to the Temporary Set.
 		sommetsTemp.add(airportSource);
 
@@ -168,6 +157,7 @@ public class Graph {
 
 		while(!current.equals(destination)) { // While we are not at the destination.
 
+			//find all fly who have for source the current airport
 			for(Fly fly : outGoingFlies.get(current)) { 							
 				Airport step = fly.getDest();
 				if(!sommetsDef.contains(step)) {
@@ -177,30 +167,28 @@ public class Graph {
 					if(coutActuel== Double.MAX_VALUE) coutActuel = 0;
 					double nouvelleDistance = distanceTrajet+coutActuel;
 
+					//check if already in temporary set if yes check if distance must be changed
 					if(sommetsTemp.contains(step)) {
-
 						if(step.getCout() > nouvelleDistance ) {
 							sommetsTemp.remove(step);
 							step.setCout(nouvelleDistance);
 							sommetsTemp.add(step);
-
 							path.put(step, fly);
-
 						}
-					}else {
 
+						//not in temp, so we add it
+					}else {
 						step.setCout(nouvelleDistance);
 						sommetsTemp.add(step);
-
 						path.put(step, fly);
-
 					}
 				}
 			}
-
 			if(sommetsTemp.isEmpty()) {
 				break;
 			}
+
+			//we find the lowest distance (with the treeset/comparator) and we add it in the definitive set
 			current = sommetsTemp.first();
 			sommetsDef.add(current);
 			sommetsTemp.remove(current);
@@ -211,14 +199,11 @@ public class Graph {
 		ArrayList<Fly> itinerary = new ArrayList<>();
 		Airport airport = airportMap.get(dest);
 		while(airport != null) {
-
 			if(airport == airportSource) {
 				break;
 			}
 			itinerary.add(path.get(airport));		
 			airport = itinerary.get(itinerary.size()-1).getSource();
-
-
 		}
 
 		//Display the shortest way with total Distance.
