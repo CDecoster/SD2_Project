@@ -130,7 +130,6 @@ public class Graph {
 
 	public void calculerItineraireMiniminantDistance(String source,String dest) {
 		HashMap<Airport,Fly> path = new HashMap<Airport, Fly>();
-		System.out.println("coucou");
 		//initialisation des liens airports vols
 		HashMap<Airport,HashSet<Fly>> outGoingFlies = new HashMap<>();
 		for (String iso : airportMap.keySet()) {
@@ -157,43 +156,47 @@ public class Graph {
 		
 		//cout de la source initialis� � 0
 		Airport airportSource=airportMap.get(source);
-		airportSource.setCout(0);
-		
+		airportSource.setCout(0);		
 		//ajout de la source directement dans sommet def
 		sommetsDef.add(airportSource);
 		
-		Airport destination = airportSource;
+		//Destination
+		Airport destination = airportMap.get(dest);;
 		
-	
+		Airport current = airportSource;
 		
-		while(destination.getIso2()!= dest) { //change here destination airport temp
+		while(!current.equals(destination)) { //change here destination airport temp
 			
 			//r�cuperer la distance entre airportTemps et ses destinations not� la distance
-			for(Fly fly : outGoingFlies.get(destination)) { //change here destination airport temp
+			for(Fly fly : outGoingFlies.get(current)) { //change here destination airport temp
 				
 				//verifier si d�j� plac� dans definitif
-				destination = fly.getDest();
-				if(!sommetsDef.contains(destination)) {
+				current = fly.getDest();
+				if(!sommetsDef.contains(current)) {
 					double distanceTrajet = fly.getDistance();
-					double coutActuel = destination.getCout();
-					if(coutActuel== Integer.MAX_VALUE) coutActuel = 0;
+					
+					double coutActuel = current.getCout();
+					if(coutActuel== Double.MAX_VALUE) coutActuel = 0;
 					double nouvelleDistance = distanceTrajet+coutActuel;
 					
 					//check si d�j� dans les sommets temporaires
-					if(sommetsTemp.contains(destination)) {
+					if(sommetsTemp.contains(current)) {
+						
 						if(destination.getCout() > nouvelleDistance ) {
-							sommetsTemp.remove(destination);
-							destination.setCout(nouvelleDistance);
-							sommetsTemp.add(destination);
-							System.out.println("si contains"+fly);
-							path.put(destination, fly);
+							sommetsTemp.remove(current);
+							current.setCout(nouvelleDistance);
+							sommetsTemp.add(current);
+							
+							path.put(current, fly);
+						//	System.out.println(path.get(current));
 						}
 					}else {
 						//pas dans les sommets temp
-						destination.setCout(nouvelleDistance);
-						sommetsTemp.add(destination);
+						current.setCout(nouvelleDistance);
+						sommetsTemp.add(current);
 						
-						path.put(destination, fly);
+						path.put(current, fly);
+					//	System.out.println(path.get(current));
 					}
 				}
 			}
@@ -202,9 +205,9 @@ public class Graph {
 				break;
 			}
 			//r�cuperer le sommet le plus court
-			Airport airportLowest = sommetsTemp.first();
-			sommetsDef.add(airportLowest);
-			sommetsTemp.remove(airportLowest);
+			current = sommetsTemp.first();
+			sommetsDef.add(current);
+			sommetsTemp.remove(current);
 				
 		}
 		 
@@ -215,21 +218,26 @@ public class Graph {
 		Airport airport = airportMap.get(dest);
 		//System.out.println((Fly) outGoingFlies.get(airport).toArray()[0]);
 		//trajet.add((Fly) outGoingFlies.get(airport).toArray()[0]);
-		
+		//System.out.println(path.get(airportMap.get("LHR")));
 		while(airport != null) {
-
+			
 			if(airport == airportSource) {
 				break;
 			}
 			trajet.add(path.get(airport));
-			Fly fly = trajet.get(trajet.size()-1);
-			airport = fly.getSource();
+		//	System.out.println(trajet.size());
+			//System.out.println(path.get(airport));
+			airport = trajet.get(trajet.size()-1).getSource();
+			
 	
 		}
 		for(Fly fly :trajet) {
-			System.out.println("coucou");
+			distanceTotale += fly.getDistance();
+			System.out.println(fly);
 
 		}
+		System.out.println(distanceTotale);
+	}
 		
 
 	

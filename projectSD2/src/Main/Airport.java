@@ -19,7 +19,7 @@ public class Airport {
 		this.country = country;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.cout = Integer.MAX_VALUE;
+		this.cout = Double.MAX_VALUE;
 		
 	}
 	
