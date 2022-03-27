@@ -144,17 +144,17 @@ public class Graph {
 		};
 
 		//Instantiate the temporary set of summit.
-		TreeSet<Airport> sommetsTemp = new TreeSet<Airport>(comparateur);
+		TreeSet<Airport> tempSummits = new TreeSet<Airport>(comparateur);
 
 		//Definitive Set of summit
-		HashSet<Airport> sommetsDef = new HashSet<Airport>();
+		HashSet<Airport> defSummits = new HashSet<Airport>();
 
 
 		Airport airportSource=airportMap.get(source);
 		airportSource.setCout(0);
 
 		//Add the airport source to the Temporary Set.
-		sommetsTemp.add(airportSource);
+		tempSummits.add(airportSource);
 
 		//Destination
 		Airport destination = airportMap.get(dest);;
@@ -166,38 +166,38 @@ public class Graph {
 			//find all fly who have for source the current airport
 			for(Fly fly : outGoingFlies.get(current)) { 							
 				Airport step = fly.getDest();
-				if(!sommetsDef.contains(step)) {
-					double distanceTrajet = fly.getDistance();
+				if(!defSummits.contains(step)) {
+					double travelDistance = fly.getDistance();
 
-					double coutActuel = current.getCout();
-					if(coutActuel== Double.MAX_VALUE) coutActuel = 0;
-					double nouvelleDistance = distanceTrajet+coutActuel;
+					double actualCost = current.getCout();
+					if(actualCost== Double.MAX_VALUE) actualCost = 0;
+					double newDistance = travelDistance+actualCost;
 
 					//check if already in temporary set if yes check if distance must be changed
-					if(sommetsTemp.contains(step)) {
-						if(step.getCout() > nouvelleDistance ) {
-							sommetsTemp.remove(step);
-							step.setCout(nouvelleDistance);
-							sommetsTemp.add(step);
+					if(tempSummits.contains(step)) {
+						if(step.getCout() > newDistance ) {
+							tempSummits.remove(step);
+							step.setCout(newDistance);
+							tempSummits.add(step);
 							path.put(step, fly);
 						}
 
 						//not in temp, so we add it
 					}else {
-						step.setCout(nouvelleDistance);
-						sommetsTemp.add(step);
+						step.setCout(newDistance);
+						tempSummits.add(step);
 						path.put(step, fly);
 					}
 				}
 			}
-			if(sommetsTemp.isEmpty()) {
+			if(tempSummits.isEmpty()) {
 				break;
 			}
 
 			//we find the lowest distance (with the treeset/comparator) and we add it in the definitive set
-			current = sommetsTemp.first();
-			sommetsDef.add(current);
-			sommetsTemp.remove(current);
+			current = tempSummits.first();
+			defSummits.add(current);
+			tempSummits.remove(current);
 
 		}
 
