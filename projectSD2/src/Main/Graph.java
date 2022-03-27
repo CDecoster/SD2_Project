@@ -1,3 +1,9 @@
+/**
+ * @author Decoster Corentin, Declerck Axel
+ *
+ * 
+ */
+
 package Main;
 
 import java.io.BufferedReader;
