@@ -149,7 +149,7 @@ public class Graph {
 		//Definitive Set of summit
 		HashSet<Airport> sommetsDef = new HashSet<Airport>();
 
-
+		//set airport source at 0 cost
 		Airport airportSource=airportMap.get(source);
 		airportSource.setCout(0);
 
